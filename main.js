@@ -45,16 +45,13 @@ function createPiece(type) {
   }
 }    
 
-function updateScore() {
-  document.getElementById('score').innerText = tetris.player.score;
-}
+
 
 const tetri = []
 
 const playerElements = document.querySelectorAll('.player');
 [...playerElements].forEach(element => {
-  const canvas = element.querySelector('canvas');
-  const tetris = new Tetris(canvas);
+  const tetris = new Tetris(element);
   tetri.push(tetris);
 });
 
@@ -71,7 +68,6 @@ const keyListener = (event) => {
    const player = tetri[index].player;
 
     if(event.type === 'keydown'){
-
       if(event.keyCode === key[0]) {
         player.move(-1);
       } else if (event.keyCode === key[1]) {
@@ -81,15 +77,19 @@ const keyListener = (event) => {
       } else if (event.keyCode === key[3]) {
         player.rotate(1);
       }
-
-    } else if (event.keyCode === key[4]) {
-      player.drop();
+    } 
+     if (event.keyCode === key[4]) {
+      if (event.type === 'keydown') {
+        if(event.type !== player.DROP_FAST){
+          player.drop();
+          player.dropInterval = player.DROP_FAST;
+        }
+      } else {
+        player.dropInterval = player.DROP_SLOW;
+      }
     }
-      //Tempo do video q vc parou otario 44:17
   });
-}
+};
 
  document.addEventListener('keydown', keyListener);
  document.addEventListener('keyup', keyListener);
-
- updateScore();
